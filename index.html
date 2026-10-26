@@ -128,7 +128,7 @@ function stopAdzan(){A.pause();A.currentTime=0;A.onended=null;$("adz").classList
 function adzan(name){vidSound(false);
   $("adzN").textContent=name;$("adz").classList.add("show");
   const done=()=>setTimeout(()=>{$("adz").classList.remove("show");vidSound(true)},15000);
-  if(customURL){A.currentTime=0;A.play().catch(()=>{});A.onended=done}
+  if(customURL){A.currentTime=0;A.volume=1;A.muted=false;A.play().catch(()=>{beep();setTimeout(()=>{$("adz").classList.remove("show");vidSound(true)},8000)});A.onended=done}
   else{beep();setTimeout(()=>{$("adz").classList.remove("show");vidSound(true)},8000)}
 }
 
@@ -141,7 +141,7 @@ function loadAssets(){
   const a=new Image();a.onload=()=>{if($("logo").style.display==="none")setImg("logo",ASSET.logo)};a.src=ASSET.logo;
   const b=new Image();b.onload=()=>{if(!document.body.style.backgroundImage)setImg("bg",ASSET.bg)};b.src=ASSET.bg;
   fetch(ASSET.video,{method:"HEAD"}).then(r=>{if(r.ok&&/video|octet/.test(r.headers.get("content-type")||"")&&!$("vid").getAttribute("src"))setVid(ASSET.video)}).catch(()=>{});
-  fetch(ASSET.adzan,{method:"HEAD"}).then(r=>{if(r.ok&&/audio|octet/.test(r.headers.get("content-type")||"")&&!customURL){customURL=ASSET.adzan;A.src=customURL}}).catch(()=>{});
+  if(!customURL){customURL=ASSET.adzan;A.preload="auto";A.src=customURL;A.load()}
 }
 /* ---- slide informasi ---- */
 let slides=[],si=0;
